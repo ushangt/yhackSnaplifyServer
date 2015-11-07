@@ -1,0 +1,29 @@
+{
+  "name": "yhackSnaplifyServer",
+  "version": "1.0.0",
+  "description": "yhack snaplify server",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ushangt/yhackSnaplifyServer.git"
+  },
+  "keywords": [
+    "image",
+    "search"
+  ],
+  "author": "Ushang Thakker",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ushangt/yhackSnaplifyServer/issues"
+  },
+  "homepage": "https://github.com/ushangt/yhackSnaplifyServer",
+  "dependencies": {
+    "body-parser": "^1.14.1",
+    "express": "^4.13.3",
+    "express-validator": "^2.18.0",
+    "multer": "^0.1.8"
+  }
+}

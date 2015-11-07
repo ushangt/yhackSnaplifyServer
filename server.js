@@ -15,7 +15,7 @@ server.use(multer({
         fieldNameSize: 50,
         files: 1,
         fields: 5,
-        fileSize: 1024 * 1024
+        fileSize: 2048 * 2048
     },
     rename: function(fieldname, filename) {
         return filename.replace(/\W+/g, '-').toLowerCase() +'_'+Date.now();
@@ -29,7 +29,12 @@ server.use(multer({
     inMemory: true 											//	This is important. It's what populates the buffer.
 }));
 
-
+// CORS workaround
+server.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 server.use('/',router);
 

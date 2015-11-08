@@ -28,7 +28,7 @@ exports.recognition = function(req, res){
 exports.searchResults = function(req, res){
 
 	Bing.web(req.body.keywords, {
-	    top: 3  // Number of results (max 50) 	    
+	    top: 10  // Number of results (max 50) 	    
 	  }, function(error, results, body){
 	 
 	 	if(error){
@@ -36,8 +36,9 @@ exports.searchResults = function(req, res){
 	            message: error
 	        });
 	 	}
-	 	if(body.d.results.length > 3)	
-	 		res.json(_.first(body.d.results, 3));
+	 	console.log(body.d.results);
+	 	if(body.d.results.length > 10)	
+	 		res.json(_.first(body.d.results, 10));
 	 	else
 	 		res.json(body.d.results);
 	  });
@@ -61,36 +62,57 @@ exports.ocr = function (req, res){
 
 	function callback(error, response, body) {
 	  if (!error && response.statusCode == 200) {
-	  	var words = _.pluck(response.body.regions[0].lines,'words')
-	  	var text  = _.map(words,function(word){
-				  								return _.pluck(word, 'text')
-				  							  });
-	  	var finalString = _.reduce(text, function( initial, current){
-	  										return initial+" "+current
-	  									}, "");
-	  	textapi.summarize({
-							  'text': finalString,
-							  'mode' : 'short',
-							  'title': 'Summary'
-							}, function(error, response) {
-							  if (error === null) {
-							    console.log(response);
-							    res.json({summary : response.sentences});
-							  }
-							  else{
-							  	res.status(400).send({
-						            error: error
-						        });
-							  }
-						});
-	    
-	  }
-	  else{
-	  		res.status(400).send({
-	            message: error
-	        });
-	  }
+		  	if(response.body.regions.length > 0)
+		  	{
+		  		var regions =response.body.regions;
+		  		var finalString = "";
+		  		for (var i = 0; i < regions.length; i++) {
+		  			var lines = regions[i].lines;
+		  			for (var j = 0; j < lines.length; j++) {
+		  				var words = lines[j].words;
+		  				for(var k =0; k < words.length; k++){
+		  					var text = words[k].text;
+		  					
+		  					finalString = finalString+" "+text; 
+		  					
+		  				}
+		  			}
+		  		}
+
+		  		//console.log(finalString);
+		  		
+			  	textapi.summarize({
+									  'text': finalString,
+									  'mode' : 'short',
+									  'title': 'Summary'
+									}, function(error, response) {
+									  if (error === null) {
+									    console.log(response);
+									    res.json({summary : response.sentences});
+									  }
+									  else{
+									  	res.status(400).send({
+								            error: error
+								        });
+									  }
+								});
+			    
+			}
+			else
+			{
+				res.json({summary: 'No summary to display'});
+			}
+	  	}
+	  	else{
+		  		res.status(400).send({
+		            message: error
+		        });
+		}
 	}
 
 	request.post(options, callback);
 }
+
+	
+
+	

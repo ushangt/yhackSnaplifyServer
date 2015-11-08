@@ -18,7 +18,7 @@ server.use(multer({
         fileSize: 2048 * 2048
     },
     rename: function(fieldname, filename) {
-        return filename.replace(/\W+/g, '-').toLowerCase() +'_'+Date.now();
+        return filename/*.replace(/\W+/g, '-').toLowerCase() +'_'+Date.now()*/;
     },
     onFileUploadStart: function(file) {
         //console.log('Starting file upload process.');
